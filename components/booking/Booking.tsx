@@ -6,7 +6,7 @@ import Cards from './Cards'
 
 const Booking = () => {
   return (
-    <div className='p-5' >
+    <div className='p-3' >
       <h2 className='text-[20px] font-semibold'>Booking</h2>
        <div className='border border-gray-300 p-2 rounded-md h-full'>
       <AutoCompleteAddress/>

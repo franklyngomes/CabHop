@@ -21,10 +21,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={`${roboto.className} antialiased`}
-        >
-          <NavBar/>
+        <head>
+        </head>
+        <body className={`${roboto.className} antialiased`}>
+          <NavBar />
           {children}
         </body>
       </html>
