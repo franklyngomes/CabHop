@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 const NavBar = () => {
   return (
@@ -9,19 +10,17 @@ const NavBar = () => {
         <Image
           src="/assets/cabhop-logo.png"
           width={100}
-          height={100}
+          height={40}
           alt="CabHop"
+          priority
+           className="h-10 w-auto"
         />
         <ul className="hidden md:flex justify-between gap-5">
+          <Link href="/">
           <li className="hover:bg-gray-100 p-2 rounded-md cursor-pointer transition-all">
             Home
           </li>
-          <li className="hover:bg-gray-100 p-2 rounded-md cursor-pointer transition-all">
-            History
-          </li>
-          <li className="hover:bg-gray-100 p-2 rounded-md cursor-pointer transition-all">
-            Help
-          </li>
+          </Link>
         </ul>
       </div>
       <UserButton afterSwitchSessionUrl="/" />

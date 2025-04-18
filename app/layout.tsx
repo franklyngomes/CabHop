@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import NavBar from "@/components/NavBar";
+import React from "react";
+import CustomLayout from "./customLayout";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -18,14 +20,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <ClerkProvider>
       <html lang="en">
-        <head>
-        </head>
+        <head></head>
         <body className={`${roboto.className} antialiased`}>
-          <NavBar />
-          {children}
+          <Toaster/>
+          <CustomLayout>
+            {children}
+          </CustomLayout>
         </body>
       </html>
     </ClerkProvider>

@@ -1,12 +1,22 @@
+import {
+  DestinationContext,
+  UserLocationContext,
+} from "@/context/UserLocation.Context";
 import React from "react";
 
 const AutoCompleteAddress = () => {
   const [source, setSource] = React.useState<string>("");
   const [destination, setDestination] = React.useState<string>("");
   const [sourceChange, setSourceChange] = React.useState<boolean>(false);
-  const [destinationChange, setDestinationChange] =React.useState<boolean>(false);
+  const [destinationChange, setDestinationChange] =
+    React.useState<boolean>(false);
   const [sourceAddressList, setSourceAddressList] = React.useState<any>([]);
-  const [destinationAddressList, setDestinationAddressList] = React.useState<any>([]);
+  const [destinationAddressList, setDestinationAddressList] =
+    React.useState<any>([]);
+  const { userLocation, setUserLocation } =
+    React.useContext(UserLocationContext);
+  const { destinationLocation, setDestinationLocation } =
+    React.useContext(DestinationContext);
   const getSourceAddressList = async () => {
     if (source !== null) {
       const response = await fetch("/api/search-address?text=" + source, {
@@ -30,15 +40,15 @@ const AutoCompleteAddress = () => {
     }
   };
   React.useEffect(() => {
-      if(sourceChange && source.trim() !== ""){
-        getSourceAddressList()
-      }
-  }, [source]);
-  React.useEffect(() => {
-    if(destinationChange && destination.trim() !== ""){
-      getDestinationAddressList()
+    if (sourceChange && source.trim() !== "") {
+      getSourceAddressList();
     }
-}, [destination]);
+  }, [source, userLocation]);
+  React.useEffect(() => {
+    if (destinationChange && destination.trim() !== "") {
+      getDestinationAddressList();
+    }
+  }, [destination]);
   return (
     <div className="mt-3">
       <div>
@@ -51,6 +61,7 @@ const AutoCompleteAddress = () => {
           id=""
           className="bg-white border-[1px] border-gray-300 w-full rounded-md outline-none focus:border-yellow-300"
           value={source || ""}
+          placeholder={!source ? "Your Location" : ""}
           onChange={(e) => {
             setSource(e.target.value || "");
             setSourceChange(true);
@@ -66,7 +77,11 @@ const AutoCompleteAddress = () => {
                 onClick={() => {
                   setSource(item.properties.name);
                   setSourceAddressList([]);
-                  setSourceChange(false)
+                  setSourceChange(false);
+                  setUserLocation({
+                    lat: item.properties.lat,
+                    lon: item.properties.lon,
+                  });
                 }}
               >
                 {item.properties.name}
@@ -100,7 +115,11 @@ const AutoCompleteAddress = () => {
                 onClick={() => {
                   setDestination(item.properties.name);
                   setDestinationAddressList([]);
-                  setDestinationChange(false)
+                  setDestinationChange(false);
+                  setDestinationLocation({
+                    lat: item.properties.lat,
+                    lon: item.properties.lon,
+                  });
                 }}
               >
                 {item.properties.name}
