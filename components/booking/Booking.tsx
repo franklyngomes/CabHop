@@ -18,8 +18,9 @@ const Booking = () => {
         <Cars />
         <Cards />
         <button
-          className="w-full bg-yellow-400 p-1 rounded-md mt-4"
+          className="w-full bg-yellow-400 p-1 rounded-md mt-4 cursor-pointer"
           onClick={() => router.push("/payment")}
+          
         >
           Book
         </button>

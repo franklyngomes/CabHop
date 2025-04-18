@@ -1,2 +1,3 @@
-import { createContext } from "react";
-export const AmountContext = createContext<any>(null);
+import React from "react";
+
+export const AmountContext = React.createContext<any>(null);
