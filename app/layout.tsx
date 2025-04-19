@@ -22,7 +22,13 @@ export default function RootLayout({
 }>) {
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    appearance={{}}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
+    >
       <html lang="en">
         <head></head>
         <body className={`${roboto.className} antialiased`}>
