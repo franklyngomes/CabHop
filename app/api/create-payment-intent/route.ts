@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -7,15 +7,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: NextRequest) {
-  const { userId } = await auth();
+  const user = await currentUser();
 
-  if (!userId) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const body = await req.json();
+  const amount = Number(body.amount);
 
-  if (body.amount < 50) {
+  if (amount < 50) {
     return NextResponse.json(
       { error: "Amount must be at least $0.50" },
       { status: 400 }
@@ -24,19 +25,20 @@ export async function POST(req: NextRequest) {
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: body.amount,
+      amount,
       currency: "usd",
-      automatic_payment_methods: { enabled: true },
+      automatic_payment_methods: {
+        enabled: true,
+      },
       metadata: {
-        userId,
+        userId: user.id,
+        email: user.emailAddresses?.[0]?.emailAddress || "unknown",
       },
     });
 
-    return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (err: any) {
-    console.error("❌ Stripe error:", err.message);
+    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error: any) {
+    console.error("❌ Stripe error:", error.message);
     return NextResponse.json(
       { error: "Failed to create payment intent" },
       { status: 500 }
