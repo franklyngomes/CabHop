@@ -15,7 +15,7 @@ const Payment = () => {
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: 3 }), // amount in cents
+      body: JSON.stringify({ amount: 50 }), // amount in cents
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
