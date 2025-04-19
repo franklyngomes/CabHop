@@ -8,7 +8,8 @@ import {
   DestinationContext,
 } from "@/context/UserLocation.Context";
 import { AmountContext } from "@/context/AmountContext";
-
+import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function Home() {
   const [userLocation, setUserLocation] = React.useState({
@@ -23,7 +24,8 @@ export default function Home() {
     distance: 0,
     time: 0,
   });
-  const [carAmount, setCarAmount] = React.useState()
+  const [carAmount, setCarAmount] = React.useState();
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -34,7 +36,18 @@ export default function Home() {
         });
       },
       (error) => {
-        console.error("Geolocation error:", error);
+        toast.error('Enable location services from your device for better experience', {
+          style: {
+            background:"#f8c853",
+            padding: '10px',
+            color: '#000',
+          },
+          iconTheme: {
+            primary: '##f8c853',
+            secondary: '#000',
+          },
+        });
+        console.warn("Geolocation error:", error);
       },
       {
         enableHighAccuracy: true,
@@ -45,9 +58,15 @@ export default function Home() {
   };
   React.useEffect(() => {
     getUserLocation();
+    setLoading(false)
   }, []);
   return (
     <div>
+      {loading ? (
+        <div className="flex justify-center items-center m-auto mt-5">
+        <Image src="/assets/loader.gif" width={50} height={50} alt="Loader" />
+        </div>
+      ) : (
         <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
           <DestinationContext.Provider
             value={{ destinationLocation, setDestinationLocation }}
@@ -55,19 +74,20 @@ export default function Home() {
             <DirectionDataContext.Provider
               value={{ directionData, setDirectionData }}
             >
-              <AmountContext.Provider value={{carAmount, setCarAmount}}>
-              <div className="grid grid-cols-1 md:grid-cols-3 ">
-                <div className="col-span-1">
-                  <Booking />
+              <AmountContext.Provider value={{ carAmount, setCarAmount }}>
+                <div className="grid grid-cols-1 md:grid-cols-3 ">
+                  <div className="col-span-1">
+                    <Booking />
+                  </div>
+                  <div className="col-span-2 order-first md:order-last">
+                    <MapBox />
+                  </div>
                 </div>
-                <div className="col-span-2 order-first md:order-last">
-                  <MapBox />
-                </div>
-              </div>
               </AmountContext.Provider>
             </DirectionDataContext.Provider>
           </DestinationContext.Provider>
         </UserLocationContext.Provider>
+      )}
     </div>
   );
 }

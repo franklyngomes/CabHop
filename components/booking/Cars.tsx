@@ -12,7 +12,6 @@ const Cars = () => {
     return newCharges.toFixed(2);
   };
   const {carAmount, setCarAmount} = useContext(AmountContext)
-  console.log(carAmount)
 
   return (
     <div className="mt-3">
